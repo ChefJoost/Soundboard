@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scheetboard 💨</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #1a1a2e;
+      color: #eee;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 8px;
+      letter-spacing: 2px;
+    }
+
+    .subtitle {
+      color: #aaa;
+      margin-bottom: 40px;
+      font-size: 1rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .fart-btn {
+      background: #16213e;
+      border: 2px solid #0f3460;
+      border-radius: 16px;
+      padding: 24px 16px;
+      cursor: pointer;
+      transition: transform 0.1s, background 0.2s, border-color 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      user-select: none;
+    }
+
+    .fart-btn:hover {
+      background: #0f3460;
+      border-color: #e94560;
+    }
+
+    .fart-btn:active,
+    .fart-btn.playing {
+      transform: scale(0.95);
+      background: #e94560;
+      border-color: #e94560;
+    }
+
+    .fart-btn .emoji {
+      font-size: 2.4rem;
+    }
+
+    .fart-btn .name {
+      font-size: 1.1rem;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .fart-btn .date {
+      font-size: 0.8rem;
+      color: #aaa;
+    }
+
+    .fart-btn.playing .date {
+      color: #fff;
+    }
+
+    .footer {
+      margin-top: 50px;
+      color: #555;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>💨 Scheetboard</h1>
+  <p class="subtitle">Klik op een knop om de klassieke te horen</p>
+
+  <div class="grid" id="board"></div>
+
+  <p class="footer">Voeg je eigen scheeten toe door audio/ te vullen en sounds in index.html aan te passen.</p>
+
+  <script>
+    /*
+     * =============================================
+     * VOEG HIER JOUW SCHEETEN TOE / BEWERK ZE HIER
+     * =============================================
+     *
+     * Elk object heeft:
+     *   name  — naam van de persoon
+     *   date  — datum van de historische gebeurtenis
+     *   file  — bestandsnaam in de map /audio/
+     *   emoji — optioneel, standaard 💨
+     *
+     * Zet je audiobestand (mp3 of wav) in de map /audio/
+     * en voeg hieronder een regel toe.
+     */
+    const sounds = [
+      { name: "Joost",   date: "14 feb 2025", file: "joost.mp3",   emoji: "💨" },
+      { name: "Henk",    date: "3 jan 2025",  file: "henk.mp3",    emoji: "💨" },
+      { name: "Marieke", date: "22 mrt 2024", file: "marieke.mp3", emoji: "💨" },
+      // Voeg hier meer toe ↓
+      // { name: "Naam", date: "dag maand jaar", file: "bestandsnaam.mp3", emoji: "💨" },
+    ];
+
+    /*
+     * =============================================
+     * HIERONDER HOEF JE NIETS TE VERANDEREN
+     * =============================================
+     */
+    const board = document.getElementById('board');
+    let currentAudio = null;
+
+    sounds.forEach(sound => {
+      const btn = document.createElement('button');
+      btn.className = 'fart-btn';
+      btn.innerHTML = `
+        <span class="emoji">${sound.emoji || '💨'}</span>
+        <span class="name">${sound.name}</span>
+        <span class="date">${sound.date}</span>
+      `;
+
+      btn.addEventListener('click', () => {
+        // Stop huidig geluid als er al iets speelt
+        if (currentAudio) {
+          currentAudio.pause();
+          currentAudio.currentTime = 0;
+          document.querySelectorAll('.fart-btn').forEach(b => b.classList.remove('playing'));
+        }
+
+        const audio = new Audio(`audio/${sound.file}`);
+        currentAudio = audio;
+        btn.classList.add('playing');
+
+        audio.play().catch(() => {
+          alert(`Bestand niet gevonden: audio/${sound.file}`);
+          btn.classList.remove('playing');
+        });
+
+        audio.addEventListener('ended', () => {
+          btn.classList.remove('playing');
+          currentAudio = null;
+        });
+      });
+
+      board.appendChild(btn);
+    });
+  </script>
+</body>
+</html>
