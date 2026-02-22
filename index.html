@@ -68,14 +68,28 @@
       border-color: #e94560;
     }
 
-    .fart-btn .emoji {
-      font-size: 2.4rem;
+    .fart-btn .avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #0f3460;
+      transition: border-color 0.2s;
+    }
+
+    .fart-btn:hover .avatar {
+      border-color: #e94560;
+    }
+
+    .fart-btn.playing .avatar {
+      border-color: #fff;
     }
 
     .fart-btn .name {
       font-size: 1.1rem;
       font-weight: bold;
       text-align: center;
+      color: #fff;
     }
 
     .fart-btn .date {
@@ -86,12 +100,6 @@
     .fart-btn.playing .date {
       color: #fff;
     }
-
-    .footer {
-      margin-top: 50px;
-      color: #555;
-      font-size: 0.8rem;
-    }
   </style>
 </head>
 <body>
@@ -101,7 +109,7 @@
 
   <div class="grid" id="board"></div>
 
-  <p class="footer">Voeg je eigen scheeten toe door audio/ te vullen en sounds in index.html aan te passen.</p>
+
 
   <script>
     /*
@@ -112,18 +120,15 @@
      * Elk object heeft:
      *   name  — naam van de persoon
      *   date  — datum van de historische gebeurtenis
-     *   file  — bestandsnaam in de map /audio/
-     *   emoji — optioneel, standaard 💨
-     *
-     * Zet je audiobestand (mp3 of wav) in de map /audio/
-     * en voeg hieronder een regel toe.
+     *   file  — audiobestand in de map /audio/
+     *   image — foto in de map /images/
      */
     const sounds = [
-      { name: "Joost",   date: "14 feb 2025", file: "joost.mp3",   emoji: "💨" },
-      { name: "Henk",    date: "3 jan 2025",  file: "henk.mp3",    emoji: "💨" },
-      { name: "Marieke", date: "22 mrt 2024", file: "marieke.mp3", emoji: "💨" },
+      { name: "Joost",   date: "14 feb 2025", file: "joost.mp3",   image: "joost.jpg" },
+      { name: "Henk",    date: "3 jan 2025",  file: "henk.mp3",    image: "henk.jpg" },
+      { name: "Marieke", date: "22 mrt 2024", file: "marieke.mp3", image: "marieke.jpg" },
       // Voeg hier meer toe ↓
-      // { name: "Naam", date: "dag maand jaar", file: "bestandsnaam.mp3", emoji: "💨" },
+      // { name: "Naam", date: "dag maand jaar", file: "naam.mp3", image: "naam.jpg" },
     ];
 
     /*
@@ -138,7 +143,7 @@
       const btn = document.createElement('button');
       btn.className = 'fart-btn';
       btn.innerHTML = `
-        <span class="emoji">${sound.emoji || '💨'}</span>
+        <img class="avatar" src="images/${sound.image}" alt="${sound.name}" />
         <span class="name">${sound.name}</span>
         <span class="date">${sound.date}</span>
       `;
